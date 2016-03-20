@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>vue-scroll-view</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.8/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.2.js"></script>
+  </head>
+  <body>
+
+
+  <div id="content">
+    <div style="position: fixed">lower {{lowerLimit}}, higher {{higherLimit}}, diff {{higherLimit - lowerLimit}}</div>
+    <thumbnail v-for="elm in vertical"
+      :caption="elm.image.caption"
+      :title="elm.image.title"
+      :uri="elm.image.display_sizes[0].uri"
+      :transform="elm.transform"
+    ></thumbnail>
+  </div>
+
+  <script>
+var setup = function(data) {
+    Vue.component('thumbnail', {
+        template: '<div class="thumbnail2"><img style="height:100%" :src="uri" alt="..."></div>',
+        data: function(){return{}},
+        props: [
+            'id',
+            'title',
+            'uri',
+            'caption',
+            'height',
+            'width',
+            'transform'
+        ]
+    })
+    new Vue({
+        el: "#content",
+        data: {
+            pages: [],
+            images: data.images,
+            loaded: false,
+            scrollDelta: 0,
+            scrollTop: 0,
+            elementHeight: 200,
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            lowerLimit: 0,
+            higherLimit: 0
+        },
+
+        ready: function ready() {
+            var _this = this;
+
+            window.onscroll = function(e) {
+                _this.scrollTop = window.scrollY;
+            };
+        },
+        computed: {
+            vertical: function vertical() {
+                var rowsAbove = Math.floor(this.scrollTop / this.elementHeight);
+                var visibleRows = Math.ceil((rowsAbove * this.elementHeight + this.windowHeight) / this.elementHeight);
+
+                var extra = Math.ceil(visibleRows / 2);
+                var lowerLimit = rowsAbove;
+                var higherLimit = visibleRows + extra * 2;
+
+                this.lowerLimit = lowerLimit;
+                this.higherLimit = lowerLimit + 10;
+
+                var elementsToRender = [];
+                for (var index = lowerLimit; index < higherLimit; index++) {
+                    elementsToRender.push({
+                        id: this.images[index].id,
+                        transform: 'translate(0px,' + index * this.elementHeight + 'px)',
+                        height: this.elementHeight + 'px',
+                        image: this.images[index]
+                    });
+                }
+                // wtf this keeps getting lager
+                console.log(elementsToRender.length);
+                return elementsToRender;
+            }
+        },
+    });
+
+}
+
+$.getJSON("https://raw.githubusercontent.com/ajbeach2/vue-scroll-view/master/src/assets/mock.json", function(data) {
+    setup(data);
+});
+
+  </script>
+  </body>
+</html>

@@ -1,12 +1,12 @@
 <template>
-  <div id="content">
-    <div style="position: fixed">lower {{lowerLimit}}, higher {{higherLimit}}, diff {{higherLimit - lowerLimit}}</div>
+  <div id="content" v-bind:style="{height: height + 'px'}">
+    <div style="position: fixed; z-index: 99">lower {{lowerLimit}}, higher {{higherLimit}}, diff {{higherLimit - lowerLimit}} height {{height}}</div>
     <hello v-for="elm in vertical"
       :caption="elm.image.caption"
       :title="elm.image.title"
       :uri="elm.image.display_sizes[0].uri"
       :transform="elm.transform"
-      :track-by="$index"
+      :trackBy="elm.id"
     ></hello>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
       windowHeight: global.innerHeight,
       lowerLimit: 0,
       higherLimit: 0,
-      vertical: []
+      visibleRows: 0
     }
   },
   ready () {
@@ -38,27 +38,31 @@ export default {
   },
 
   computed: {
+    height () {
+      return this.visibleRows * this.elementHeight
+    },
     vertical () {
       var rowsAbove = Math.floor(this.scrollTop / this.elementHeight)
       var visibleRows = Math.ceil(((rowsAbove * this.elementHeight) + this.windowHeight) / this.elementHeight)
 
-      var extra = Math.ceil(visibleRows / 2)
-      var lowerLimit = (rowsAbove)
-      var higherLimit = (visibleRows + extra * 2)
+     // var extra = Math.ceil(visibleRows / 2)
+      var lowerLimit = rowsAbove
+      var higherLimit = 20 + rowsAbove + Math.floor(this.windowHeight / this.elementHeight)
 
       this.lowerLimit = lowerLimit
-      this.higherLimit = lowerLimit + 10
+      this.higherLimit = higherLimit
+      this.visibleRows = visibleRows
 
       var elementsToRender = []
       for (var index = lowerLimit; index < higherLimit; index++) {
+        if (index >= this.images.length) return elementsToRender
         elementsToRender.push({
-          id: this.images[index].id,
+          id: this.images[index]['id'],
           transform: 'translate(0px,' + (index * this.elementHeight) + 'px)',
           height: this.elementHeight + 'px',
           image: this.images[index]
         })
       }
-      // wtf this keeps getting lager
       console.log(elementsToRender.length)
       return elementsToRender
     }
@@ -69,3 +73,8 @@ export default {
   }
 }
 </script>
+<style type="text/css">
+  #content {
+    position: relative
+  }
+</style>
