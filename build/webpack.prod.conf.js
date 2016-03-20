@@ -9,6 +9,11 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 // whether to generate source map for production files.
 // disabling this can speed up the build.
 var SOURCE_MAP = true
+baseConfig.output = {
+  path: path.resolve(__dirname, '../dist/static'),
+  publicPath: '/vue-scroll-view/dist/static/',
+  filename: '[name].js'
+}
 
 module.exports = merge(baseConfig, {
   stats: {
@@ -20,11 +25,6 @@ module.exports = merge(baseConfig, {
     // dist/index.html will be auto-generated with correct URLs.
     filename: '[name].[chunkhash].js',
     chunkFilename: '[id].[chunkhash].js'
-  },
-  output: {
-    path: path.resolve(__dirname, '../dist/static'),
-    publicPath: '/vue-scroll-view/dist/static/',
-    filename: '[name].js'
   },
   vue: {
     loaders: cssLoaders({
