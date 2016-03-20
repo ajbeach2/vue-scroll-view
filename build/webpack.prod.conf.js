@@ -23,7 +23,7 @@ module.exports = merge(baseConfig, {
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),
-    publicPath: '/dist/vue-scroll-view/static/',
+    publicPath: '/vue-scroll-view/dist/static/',
     filename: '[name].js'
   },
   vue: {
