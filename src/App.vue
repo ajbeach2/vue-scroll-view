@@ -39,7 +39,7 @@ export default {
 
   computed: {
     height () {
-      return this.visibleRows * this.elementHeight
+      return this.images.length * this.elementHeight
     },
     vertical () {
       var rowsAbove = Math.floor(this.scrollTop / this.elementHeight)
@@ -47,7 +47,7 @@ export default {
 
      // var extra = Math.ceil(visibleRows / 2)
       var lowerLimit = rowsAbove
-      var higherLimit = 20 + rowsAbove + Math.floor(this.windowHeight / this.elementHeight)
+      var higherLimit = 2 + rowsAbove + Math.floor(this.windowHeight / this.elementHeight)
 
       this.lowerLimit = lowerLimit
       this.higherLimit = higherLimit
