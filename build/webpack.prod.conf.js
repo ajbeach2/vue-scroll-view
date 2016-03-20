@@ -1,4 +1,5 @@
 var webpack = require('webpack')
+var path = require('path')
 var merge = require('webpack-merge')
 var baseConfig = require('./webpack.base.conf')
 var cssLoaders = require('./css-loaders')
@@ -19,6 +20,11 @@ module.exports = merge(baseConfig, {
     // dist/index.html will be auto-generated with correct URLs.
     filename: '[name].[chunkhash].js',
     chunkFilename: '[id].[chunkhash].js'
+  },
+  output: {
+    path: path.resolve(__dirname, '../dist/static'),
+    publicPath: '/dist/vue-scroll-view/static/',
+    filename: '[name].js'
   },
   vue: {
     loaders: cssLoaders({
