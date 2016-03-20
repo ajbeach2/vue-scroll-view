@@ -8,7 +8,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../dist/static'),
-    publicPath: '/static/',
+    publicPath: '/vue-scroll-view/static/',
     filename: '[name].js'
   },
   resolve: {
